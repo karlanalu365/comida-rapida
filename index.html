@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piquant - Fast Food, Jugos & Postres</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: #333;
+            background-color: #f7f7f7;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+        header .navbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+        }
+        header .navbar .logo {
+            font-size: 30px;
+            font-weight: 600;
+            color: #ffcc00;
+            margin-right: 40px;
+        }
+        header .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+        }
+        header .navbar ul li a {
+            color: #fff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        header .navbar ul li a:hover {
+            color: #ffcc00;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, rgba(255, 204, 0, 0.8), rgba(255, 87, 34, 0.8)), url('https://source.unsplash.com/1600x900/?fast-food') no-repeat center center/cover;
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+        .hero-section h1 {
+            font-size: 60px;
+            margin-bottom: 10px;
+            animation: fadeIn 2s ease-in-out;
+        }
+        .hero-section h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            animation: fadeIn 2s ease-in-out;
+        }
+        .hero-section p {
+            font-size: 22px;
+            opacity: 0;
+            animation: fadeIn 3s 1s forwards;
+        }
+        .purchase-button {
+            padding: 15px 30px;
+            background-color: #ffcc00;
+            border: none;
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .purchase-button:hover {
+            background-color: #ff5722;
+            transform: scale(1.1);
+        }
+        .section {
+            display: none;
+            padding: 60px 20px;
+            margin: 30px 0;
+        }
+        .section h2 {
+            font-size: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .product-card {
+            background-color: #fff;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .product-card img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .product-card .content h3 {
+            font-size: 24px;
+            color: #333;
+            margin: 15px 0;
+        }
+        .product-card select {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px 0;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .product-card button {
+            background-color: #ffcc00;
+            border: none;
+            padding: 10px 20px;
+            color: #333;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .product-card button:hover {
+            background-color: #ff5722;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            overflow: auto;
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 60%;
+            max-width: 600px;
+            text-align: center;
+        }
+        .modal-content img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .modal-content h3 {
+            font-size: 32px;
+            margin: 20px 0;
+        }
+        .modal-content p {
+            font-size: 18px;
+            margin: 20px 0;
+        }
+        .modal-content input {
+            padding: 10px;
+            margin: 10px 0;
+            width: 50%;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .modal-content button {
+            background-color: #ff5722;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s ease;
+        }
+        .modal-content button:hover {
+            background-color: #ffcc00;
+        }
+        .modal .close {
+            color: #aaa;
+            font-size: 30px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            padding: 10px;
+        }
+        .modal .close:hover,
+        .modal .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .payment-form input {
+            margin: 10px;
+            padding: 10px;
+            width: 60%;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">Piquant Fast Food</div>
+            <ul>
+                <li><a href="javascript:void(0);" onclick="showSection('inicio')">Inicio</a></li>
+                <li><a href="javascript:void(0);" onclick="showSection('comida-rapida')">Comida Rápida</a></li>
+                <li><a href="javascript:void(0);" onclick="showSection('jugos')">Jugos</a></li>
+                <li><a href="javascript:void(0);" onclick="showSection('postres')">Postres</a></li>
+                <li><a href="javascript:void(0);" onclick="showSection('ubicacion')">Ubicación</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="inicio" class="hero-section">
+        <h1>Comida Rápida</h1>
+        <h2>Disfruta de los mejores sabores en fast food, jugos y postres</h2>
+        <p>Desde hamburguesas hasta smoothies, tenemos todo lo que tu paladar desea.</p>
+
+        <div class="image-gallery">
+            <img src="delicious-fast-food-beef-burger-restaurant-menu-poster-design-black-backgraund_10554147.jpg!w700wp.webp" alt="Imagen 1">
+            <img src="macaroons.jpg" alt="Imagen 2">
+            <img src="bebidas.jpg" alt="Imagen 3">
+        </div>
+
+    </section>
+
+    <section id="comida-rapida" class="section">
+        <h2>Comida Rápida</h2>
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="HAMBURGUESA 1200x709.jpeg" alt="Hamburguesa Clásica">
+                <div class="content">
+                    <h3>Hamburguesa Clásica</h3>
+                    <p>Jugosa carne con queso derretido, lechuga, tomate, cebolla y mayonesa.</p>
+                    <select id="burger-size">
+                        <option value="pequeña">Pequeña</option>
+                        <option value="mediana">Mediana</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Hamburguesa Clásica', 8, document.getElementById('burger-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="Celebremos-con-una-deliciosa-y-tradicional-pizza-de-pepperoni-Foto-destacada.png" alt="Pizza de Peperoni">
+                <div class="content">
+                    <h3>Pizza de Peperoni</h3>
+                    <p>Salsa de tomate, queso mozzarella y rodajas de peperoni.</p>
+                    <select id="pizza-size">
+                        <option value="pequeña">Pequeña</option>
+                        <option value="mediana">Mediana</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Pizza de Peperoni', 12, document.getElementById('pizza-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="descarga (24).jpeg" alt="Hamburguesa Clásica">
+                <div class="content">
+                    <h3>Chanfaina</h3>
+                    <select id="burger-size">
+                        <option value="pequeña">Pequeña</option>
+                        <option value="mediana">Mediana</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Hamburguesa Clásica', 8, document.getElementById('burger-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="descarga (1) (1).jpeg" alt="Pizza de Peperoni">
+                <div class="content">
+                    <h3>Hamburguesa doble</h3>
+                    <select id="pizza-size">
+                        <option value="pequeña">Pequeña</option>
+                        <option value="mediana">Mediana</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Pizza de Peperoni', 12, document.getElementById('pizza-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="descarga (2) (1).jpeg" alt="Hamburguesa Clásica">
+                <div class="content">
+                    <h3>Milanesa de pollo</h3>
+                    
+                    <select id="burger-size">
+                        <option value="pequeña">Pequeña</option>
+                        <option value="mediana">Mediana</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Hamburguesa Clásica', 8, document.getElementById('burger-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="descarga (3) (1).jpeg" alt="Pizza de Peperoni">
+                <div class="content">
+                    <h3>Pique a lo macho</h3>
+                    <select id="pizza-size">
+                        <option value="pequeña">Pequeña</option>
+                        <option value="mediana">Mediana</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Pizza de Peperoni', 12, document.getElementById('pizza-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="descarga (4) (1).jpeg" alt="Hamburguesa Clásica">
+                <div class="content">
+                    <h3>Sopa de verduras</h3>
+                    <select id="burger-size">
+                        <option value="pequeña">Pequeña</option>
+                        <option value="mediana">Mediana</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Hamburguesa Clásica', 8, document.getElementById('burger-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="descarga (5) (1).jpeg" alt="Pizza de Peperoni">
+                <div class="content">
+                    <h3>spaguety al arroz</h3>
+                    <select id="pizza-size">
+                        <option value="pequeña">Pequeña</option>
+                        <option value="mediana">Mediana</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Pizza de Peperoni', 12, document.getElementById('pizza-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="descarga (6) (1).jpeg" alt="Hamburguesa Clásica">
+                <div class="content">
+                    <h3>Lechon</h3>
+                    <select id="burger-size">
+                        <option value="pequeña">Pequeña</option>
+                        <option value="mediana">Mediana</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Hamburguesa Clásica', 8, document.getElementById('burger-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="descarga (7) (1).jpeg" alt="Pizza de Peperoni">
+                <div class="content">
+                    <h3>Fritanga española</h3>
+                    <select id="pizza-size">
+                        <option value="pequeña">Pequeña</option>
+                        <option value="mediana">Mediana</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Pizza de Peperoni', 12, document.getElementById('pizza-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="descarga (8) (1).jpeg" alt="Hamburguesa Clásica">
+                <div class="content">
+                    <h3>bufet</h3>
+                    <select id="burger-size">
+                        <option value="pequeña">Pequeña</option>
+                        <option value="mediana">Mediana</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Hamburguesa Clásica', 8, document.getElementById('burger-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="descarga (9) (1).jpeg" alt="Pizza de Peperoni">
+                <div class="content">
+                    <h3>albondigas</h3>
+                    <select id="pizza-size">
+                        <option value="pequeña">Pequeña</option>
+                        <option value="mediana">Mediana</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Pizza de Peperoni', 12, document.getElementById('pizza-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="f4a0d38df01e25efa23cd55e52e0b244_1721486791297.jpeg" alt="Hamburguesa Clásica">
+                <div class="content">
+                    <h3>pollo a la broaster</h3>
+                    <select id="burger-size">
+                        <option value="pequeña">Pequeña</option>
+                        <option value="mediana">Mediana</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Hamburguesa Clásica', 8, document.getElementById('burger-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="hawaiana_53339_2_600.jpg" alt="Pizza de Peperoni">
+                <div class="content">
+                    <h3>Pizza hawaiana</h3>
+                    <select id="pizza-size">
+                        <option value="pequeña">Pequeña</option>
+                        <option value="mediana">Mediana</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Pizza de Peperoni', 12, document.getElementById('pizza-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="Hamburguesa-de-pollo-picante.webp" alt="Hamburguesa Clásica">
+                <div class="content">
+                    <h3>Hamburguesa  de Pollo</h3>
+                    <select id="burger-size">
+                        <option value="pequeña">Pequeña</option>
+                        <option value="mediana">Mediana</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Hamburguesa Clásica', 8, document.getElementById('burger-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="Pizza_Carnivora.jpg" alt="Pizza de Peperoni">
+                <div class="content">
+                    <h3>Pizza Carnivora</h3>
+                    <select id="pizza-size">
+                        <option value="pequeña">Pequeña</option>
+                        <option value="mediana">Mediana</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Pizza de Peperoni', 12, document.getElementById('pizza-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="Alitas-rebozadas.png" alt="Hamburguesa Clásica">
+                <div class="content">
+                    <h3>Alitas con Papas</h3>
+                    <select id="burger-size">
+                        <option value="pequeña">Pequeña</option>
+                        <option value="mediana">Mediana</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Hamburguesa Clásica', 8, document.getElementById('burger-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+
+            <div class="product-grid">
+                <div class="product-card">
+                    <img src="handmade-sushi-rolls.jpg" alt="Hamburguesa Clásica">
+                    <div class="content">
+                        <h3>sushi</h3>
+                        <select id="burger-size">
+                            <option value="pequeña">Pequeña</option>
+                            <option value="mediana">Mediana</option>
+                            <option value="grande">Grande</option>
+                        </select>
+                        <button onclick="addToCart('Hamburguesa Clásica', 8, document.getElementById('burger-size').value)">Añadir al carrito</button>
+                    </div>
+                </div>
+    </section>
+
+    <section id="jugos" class="section">
+        <h2>Jugos , Cafes , te , helados </h2>
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="descarga.jpeg" alt="Jugo de Naranja">
+                <div class="content">
+                    <h3>Jugo de Naranja</h3>
+                    <p>Exprimido al momento, natural y refrescante.</p>
+                    <select id="juice-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Jugo de Naranja', 5, document.getElementById('juice-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="descarga (1).jpeg" alt="Smoothie de Frutas">
+                <div class="content">
+                    <h3>Smoothie de Frutas</h3>
+                    <p>Mezcla fresca de frutas del día con yogurt natural.</p>
+                    <select id="smoothie-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Smoothie de Frutas', 7, document.getElementById('smoothie-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="descarga (2).jpeg" alt="Jugo de Naranja">
+                <div class="content">
+                    <h3>Cafe Americano</h3>
+                    <p>preparado al instante co los mejores granos de cacao.</p>
+                    <select id="juice-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Jugo de Naranja', 5, document.getElementById('juice-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="descarga (3).jpeg" alt="Smoothie de Frutas">
+                <div class="content">
+                    <h3>Cafe Destilado</h3>
+                    <p>preparado al instante co los mejores granos de cacao.</p>
+                    <select id="smoothie-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Smoothie de Frutas', 7, document.getElementById('smoothie-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="cafemoka.jpg" alt="Jugo de Naranja">
+                <div class="content">
+                    <h3>Cafe Moka</h3>
+                    <p>preparado al instante co los mejores granos de cacao.</p>
+                    <select id="juice-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Jugo de Naranja', 5, document.getElementById('juice-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="descarga (4).jpeg" alt="Smoothie de Frutas">
+                <div class="content">
+                    <h3>jugo de frutilla</h3>
+                    <p>Exprimido al momento, natural y refrescante.</p>
+                    <select id="smoothie-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Smoothie de Frutas', 7, document.getElementById('smoothie-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="descarga (5).jpeg" alt="Jugo de Naranja">
+                <div class="content">
+                    <h3>Jugo de piña</h3>
+                    <p>Exprimido al momento, natural y refrescante.</p>
+                    <select id="juice-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Jugo de Naranja', 5, document.getElementById('juice-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="descarga (6).jpeg" alt="Smoothie de Frutas">
+                <div class="content">
+                    <h3>Smoothie de mango</h3>
+                    <p>Mezcla fresca de frutas del día con yogurt natural.</p>
+                    <select id="smoothie-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Smoothie de Frutas', 7, document.getElementById('smoothie-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="descarga (8).jpeg" alt="Jugo de Naranja">
+                <div class="cotent">
+                    <h3>Jugo de maracuya</h3>
+                    <p>Exprimido al momento, natural y refrescante.</p>
+                    <select id="juice-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Jugo de Naranja', 5, document.getElementById('juice-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="descarga (9).jpeg" alt="Smoothie de Frutas">
+                <div class="content">
+                    <h3>Jugo de sandia</h3>
+                    <p>Exprimido al momento, natural y refrescante.</p>
+                    <select id="smoothie-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Smoothie de Frutas', 7, document.getElementById('smoothie-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="descarga (10).jpeg" alt="Jugo de Naranja">
+                <div class="content">
+                    <h3>Jugo de zanahoria</h3>
+                    <p>Exprimido al momento, natural y refrescante.</p>
+                    <select id="juice-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Jugo de Naranja', 5, document.getElementById('juice-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="descarga (11).jpeg" alt="Smoothie de Frutas">
+                <div class="content">
+                    <h3>Helado de frambuesa</h3>
+                    <select id="smoothie-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Smoothie de Frutas', 7, document.getElementById('smoothie-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="descarga (12).jpeg" alt="Jugo de Naranja">
+                <div class="content">
+                    <h3>Helado de Naranja </h3>
+                    <select id="juice-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Jugo de Naranja', 5, document.getElementById('juice-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="descarga (13).jpeg" alt="Smoothie de Frutas">
+                <div class="content">
+                    <h3>Helado de chocolate</h3>
+                    <select id="smoothie-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Smoothie de Frutas', 7, document.getElementById('smoothie-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="descarga (14).jpeg" alt="Jugo de Naranja">
+                <div class="content">
+                    <h3>Helado de Menta </h3>
+                    <select id="juice-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Jugo de Naranja', 5, document.getElementById('juice-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://source.unsplash.com/1600x900/?smoothie" alt="Smoothie de Frutas">
+                <div class="content">
+                    <h3>Helado de frutilla</h3>
+                    <select id="smoothie-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Smoothie de Frutas', 7, document.getElementById('smoothie-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="descarga (15).jpeg" alt="Jugo de Naranja">
+                <div class="content">
+                    <h3>Helado de uva </h3>
+                    <select id="juice-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Jugo de Naranja', 5, document.getElementById('juice-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="descarga (18).jpeg" alt="Smoothie de Frutas">
+                <div class="content">
+                    <h3>Helado de limon </h3>
+                    <select id="smoothie-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Smoothie de Frutas', 7, document.getElementById('smoothie-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="descarga (16).jpeg" alt="Jugo de Naranja">
+                <div class="content">
+                    <h3>Helado de Manzana </h3>
+                    <select id="juice-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Jugo de Naranja', 5, document.getElementById('juice-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="" alt="Smoothie de Frutas">
+                <div class="content">
+                    <h3>Helado de Pasas al Ron</h3>
+                    <select id="smoothie-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Smoothie de Frutas', 7, document.getElementById('smoothie-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+
+
+        
+    </section>
+
+    <section id="postres" class="section">
+        <h2>Postres Deliciosos</h2>
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="torta-de-chocolate.jpg" alt="Torta de Chocolate">
+                <div class="content">
+                    <h3>Torta de Chocolate</h3>
+                    <p>Deliciosa torta de chocolate con crema suave.</p>
+                    <select id="cake-size">
+                        <option value="1- PORCION">1- PORCION</option>
+                        <option value="2- PORCIONES">2- PORCIONES</option>
+                        <option value="3- PORCIONES">3- PORCIONES</option>
+                    </select>
+                    <button onclick="addToCart('Torta de Chocolate', 8, document.getElementById('cake-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="Helado_Vainilla-web-553x458.jpg" alt="Helado de Vainilla">
+                <div class="content">
+                    <h3>Helado de Vainilla</h3>
+                    <p>Helado cremoso de vainilla con topping de chocolate.</p>
+                    <select id="icecream-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Helado de Vainilla', 6, document.getElementById('icecream-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="Screenshot_20241115-031026_1.jpg" alt="Torta de Chocolate">
+                <div class="content">
+                    <h3>Pie</h3>
+                    <p>Deliciosa </p>
+                    <select id="cake-size">
+                        <option value="1- PORCION">1- PORCION</option>
+                        <option value="2- PORCIONES">2- PORCIONES</option>
+                        <option value="3- PORCIONES">3- PORCIONES</option>
+                    </select>
+                    <button onclick="addToCart('Torta de Chocolate', 8, document.getElementById('cake-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="Screenshot_20241115-031024_1.jpg" alt="Helado de Vainilla">
+                <div class="content">
+                    <h3>Donas</h3>
+                    <p>ricas cubiertas de chocolate, frutilla</p>
+                    <select id="icecream-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Helado de Vainilla', 6, document.getElementById('icecream-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="Screenshot_20241115-031028_1.jpg" alt="Torta de Chocolate">
+                <div class="content">
+                    <h3>Mouse</h3>
+                    <p>Deliciosa y suave.</p>
+                    <select id="cake-size">
+                        <option value="1- PORCION">1- PORCION</option>
+                        <option value="2- PORCIONES">2- PORCIONES</option>
+                        <option value="3- PORCIONES">3- PORCIONES</option>
+                    </select>
+                    <button onclick="addToCart('Torta de Chocolate', 8, document.getElementById('cake-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="tresleches.jpg" alt="Helado de Vainilla">
+                <div class="content">
+                    <h3>tres leches</h3>
+                    <p>deliciosa </p>
+                    <select id="icecream-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Helado de Vainilla', 6, document.getElementById('icecream-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="" alt="Torta de Chocolate">
+                <div class="content">
+                    <h3>Torta de Selva negra</h3>
+                    <p>Deliciosa torta de chocolate con crema suave.</p>
+                    <select id="cake-size">
+                        <option value="1- PORCION">1- PORCION</option>
+                        <option value="2- PORCIONES">2- PORCIONES</option>
+                        <option value="3- PORCIONES">3- PORCIONES</option>
+                    </select>
+                    <button onclick="addToCart('Torta de Chocolate', 8, document.getElementById('cake-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="descarga (20).jpeg" alt="Helado de Vainilla">
+                <div class="content">
+                    <h3>brazo gitano</h3>
+                    <select id="icecream-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Helado de Vainilla', 6, document.getElementById('icecream-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="product-grid">
+            <div class="product-card">
+                <img src="descarga (21).jpeg" alt="Torta de Chocolate">
+                <div class="content">
+                    <h3>gelatina</h3>
+                    <select id="cake-size">
+                        <option value="1- PORCION">1- PORCION</option>
+                        <option value="2- PORCIONES">2- PORCIONES</option>
+                        <option value="3- PORCIONES">3- PORCIONES</option>
+                    </select>
+                    <button onclick="addToCart('Torta de Chocolate', 8, document.getElementById('cake-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="descarga (22).jpeg" alt="Helado de Vainilla">
+                <div class="content">
+                    <h3>cupcakes</h3>
+                    <select id="icecream-size">
+                        <option value="pequeño">Pequeño</option>
+                        <option value="mediano">Mediano</option>
+                        <option value="grande">Grande</option>
+                    </select>
+                    <button onclick="addToCart('Helado de Vainilla', 6, document.getElementById('icecream-size').value)">Añadir al carrito</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal for Cart -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Carrito de compras</h3>
+            <p id="cart-details">Tus productos</p>
+            <button onclick="showPaymentForm()">Finalizar Compra</button>
+        </div>
+    </div>
+
+    <!-- Modal for Payment -->
+    <div id="paymentForm" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>Formulario de Pago</h3>
+            <form class="payment-form">
+                <input type="text" placeholder="Nombre completo" required><br>
+                <input type="text" placeholder="Dirección" required><br>
+                <input type="text" placeholder="Número de tarjeta" required><br>
+                <button type="submit">Pagar</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        var cart = [];
+
+        function showSection(id) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.style.display = 'none';
+            });
+            document.getElementById(id).style.display = 'block';
+        }
+
+        function addToCart(product, price, size) {
+            cart.push({product: `${product} (${size})`, price: price});
+            document.getElementById('cart-details').innerHTML = cart.map(item => `${item.product} - $${item.price}`).join('<br>');
+            document.getElementById('myModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('myModal').style.display = 'none';
+            document.getElementById('paymentForm').style.display = 'none';
+        }
+
+        function showPaymentForm() {
+            document.getElementById('myModal').style.display = 'none';
+            document.getElementById('paymentForm').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
